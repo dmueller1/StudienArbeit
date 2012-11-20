@@ -96,6 +96,7 @@ public class ChatActivity extends Activity implements NewMessageEvent, NewUserIn
 			}
 
 	    });
+		messageHistory.requestFocus();
 
     }
     

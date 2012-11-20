@@ -122,6 +122,7 @@ public class ContactActivity extends Activity implements NewMessageEvent,
     }
 	
 	public void close() {
+		mySystem.writeMessagesToFile();
 		this.moveTaskToBack(true);
 	}
 

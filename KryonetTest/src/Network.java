@@ -1,8 +1,10 @@
+
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.EndPoint;
 
 //This class is a convenient place to keep things common to both the client and server.
 public class Network {
+
 	static public final int port = 54555;
 	static public final String server = "127.0.0.1";
 	static public final String username = "chatuser";
@@ -23,6 +25,7 @@ public class Network {
 		kryo.register(AddNewChat.class);
 		kryo.register(AddUserToChat.class);
 		kryo.register(GetUserIDsFromChat.class);
+		kryo.register(GetDateFromServer.class);
 	}
 
 	static public class GetUserIDsFromChat {
@@ -40,11 +43,12 @@ public class Network {
 
 	static public class GetChatsFromUser {
 		public int userID;
-		String[][] result;
+		public String[][] result;
 	}
 
 	static public class GetAllMessagesFromChat {
 		public int chatID;
+		public String lastUpdate;
 		public String[][] result;
 	}
 
@@ -75,4 +79,9 @@ public class Network {
 		public int chatID;
 		public int userID;
 	}
+	
+	static public class GetDateFromServer {
+		public String result;
+	}
+	
 }

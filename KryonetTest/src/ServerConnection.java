@@ -291,7 +291,7 @@ public class ServerConnection {
 
 	}
 
-	public String[][] getAllMessagesFromChat(int chatID) {
+	public String[][] getAllMessagesFromChat(int chatID, String lastUpdateDate) {
 		try {
 			String urlParameters = URLEncoder.encode("username", "UTF-8") + "="
 					+ URLEncoder.encode(Network.username, "UTF-8") + "&"
@@ -301,6 +301,17 @@ public class ServerConnection {
 					+ URLEncoder.encode(Network.database, "UTF-8") + "&"
 					+ URLEncoder.encode("chatID", "UTF-8") + "="
 					+ URLEncoder.encode(String.valueOf(chatID), "UTF-8");
+			
+			if(lastUpdateDate != null) {
+				urlParameters += "&" 
+						+ URLEncoder.encode("lastUpdate", "UTF-8") + "="
+						+ URLEncoder.encode(lastUpdateDate, "UTF-8");
+			} else {
+				urlParameters += "&" 
+						+ URLEncoder.encode("lastUpdate", "UTF-8") + "="
+						+ URLEncoder.encode("2000-01-01", "UTF-8");
+			}
+			
 			// String request =
 			// "http://dmmueller1.dyndns-web.com/chat/getAllMessagesFromChat.php";
 			String request = "http://" + Network.server + "/chat/getAllMessagesFromChat.php";

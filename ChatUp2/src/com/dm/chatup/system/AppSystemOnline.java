@@ -59,6 +59,8 @@ public class AppSystemOnline  {
 					Chat c = new Chat(Integer.valueOf(chats[i][0]), chats[i][1]);
 					appSystem.addChat(c);
 				}
+				
+				appSystem.readMessagesFromFiles();
 
 				// 3. Schritt: Nachrichten aus diesen Chats auslesen
 				for (int anzChats = 0; anzChats < appSystem.getMyChats().size(); anzChats++) {
@@ -66,6 +68,7 @@ public class AppSystemOnline  {
 					int chatID = appSystem.getMyChats().get(anzChats).getChatID();
 					Network.GetAllMessagesFromChat gcm = new Network.GetAllMessagesFromChat();
 					gcm.chatID = chatID;
+					gcm.lastUpdate = appSystem.getLastUpdate();
 					if (kryonet.send(gcm)
 							&& kryonet.getResult() instanceof Network.GetAllMessagesFromChat
 							&& ((Network.GetAllMessagesFromChat) kryonet.getResult()).result != null) {
@@ -95,6 +98,8 @@ public class AppSystemOnline  {
 				}
 			}
 		}
+		
+		this.appSystem.setLastUpdate(getDateFromServer());
 	}
 	
 	public boolean createNewChat(Network.AddNewChat anc) {
@@ -154,6 +159,16 @@ public class AppSystemOnline  {
 		autc.chatID = chatID;
 		autc.userID = userID;
 		return kryonet.send(autc);
+	}
+	
+	private String getDateFromServer() {
+		Network.GetDateFromServer gdfs = new Network.GetDateFromServer();
+
+		if (kryonet.send(gdfs) && kryonet.getResult() instanceof Network.GetDateFromServer) {
+			return ((Network.GetDateFromServer)kryonet.getResult()).result;
+		} else {
+			return "-1";
+		}
 	}
 
 }

@@ -33,9 +33,10 @@ public class KryonetClient {
 			client = new Client();
 			client.start();
 			Network.register(client);
+			
 
 			client.addListener(new Listener() {
-				
+			
 				public void received(Connection connection, Object object) {
 					
 					setEmpfangen(false);
@@ -78,6 +79,7 @@ public class KryonetClient {
 					} else if (object instanceof Network.GetChatsFromUser) {
 					} else if (object instanceof Network.GetUserIDsFromChat) {
 					} else if (object instanceof Network.GetAllMessagesFromChat) {
+					} else if (object instanceof Network.GetDateFromServer) {
 					} else {
 						setEmpfangen(false);
 						return;
@@ -97,7 +99,7 @@ public class KryonetClient {
 		
 	}
 	
-	public boolean send(Object obj) {
+	public boolean send(Object obj)  {
 		try {
 			int zaehler = 0;
 			client.sendTCP(obj);

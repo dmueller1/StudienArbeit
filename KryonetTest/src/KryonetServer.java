@@ -73,8 +73,8 @@ public class KryonetServer {
 					} else if (object instanceof Network.GetAllMessagesFromChat) {
 						System.out.println("Request: Get all messages...");
 						Network.GetAllMessagesFromChat gam = (Network.GetAllMessagesFromChat)object;
-						gam.result = serverConn.getAllMessagesFromChat(gam.chatID);
-						System.out.println(" --> Data received (Array of messages):" + gam.result);
+						gam.result = serverConn.getAllMessagesFromChat(gam.chatID, gam.lastUpdate);
+						System.out.println(" --> Data received (Array of messages):" + gam.result.length);
 						connection.sendTCP(gam);
 						return;
 						
@@ -123,6 +123,21 @@ public class KryonetServer {
 								conns[i].sendTCP(autc);
 							}
 						}
+						return;
+					} else if (object instanceof Network.GetDateFromServer) {
+						System.out.println("Request: Get date from Server...");
+						Network.GetDateFromServer gdfs = (Network.GetDateFromServer)object; 
+						
+						Date now = new Date();
+						String datum = String.valueOf(1900 + now.getYear()) + "-"
+								+ String.valueOf(now.getMonth() + 1) + "-"
+								+ String.valueOf(now.getDate()) + " "
+								+ String.valueOf(now.getHours()) + ":"
+								+ String.valueOf(now.getMinutes()) + ":"
+								+ String.valueOf(now.getSeconds());
+						gdfs.result = datum;
+						System.out.println(" --> Result: " + gdfs.result);
+						connection.sendTCP(gdfs);
 						return;
 					} else {
 						System.out.println("...");

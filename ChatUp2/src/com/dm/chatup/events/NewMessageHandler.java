@@ -33,6 +33,7 @@ public class NewMessageHandler {
 	public void notifyAllListener(final Message msg) {
 		int chatIdOfMessage = msg.getChatID();
 		Chat isOneOfMyChats = AppSystem.getInstance().getChatFromID(chatIdOfMessage);
+		AppSystem.getInstance().setLastMessage(msg);
 		
 		if(isOneOfMyChats != null) {
 			AppSystem.getInstance().addMessageToChat(msg);

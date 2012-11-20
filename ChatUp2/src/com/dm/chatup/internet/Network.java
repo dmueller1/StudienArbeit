@@ -23,6 +23,7 @@ public class Network {
 		kryo.register(AddNewChat.class);
 		kryo.register(AddUserToChat.class);
 		kryo.register(GetUserIDsFromChat.class);
+		kryo.register(GetDateFromServer.class);
 	}
 
 	static public class GetUserIDsFromChat {
@@ -45,6 +46,7 @@ public class Network {
 
 	static public class GetAllMessagesFromChat {
 		public int chatID;
+		public String lastUpdate;
 		public String[][] result;
 	}
 
@@ -75,4 +77,9 @@ public class Network {
 		public int chatID;
 		public int userID;
 	}
+	
+	static public class GetDateFromServer {
+		public String result;
+	}
+	
 }
