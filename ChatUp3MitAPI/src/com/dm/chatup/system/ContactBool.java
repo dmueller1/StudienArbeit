@@ -1,6 +1,6 @@
 package com.dm.chatup.system;
 
-import de.dm.chatup.chat.Contact;
+import de.dm.chatup.network.Network.Contact;
 
 public class ContactBool {
 	

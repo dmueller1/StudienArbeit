@@ -38,6 +38,34 @@
         android:orientation="vertical" >
 
         <TextView
+            android:id="@+id/textView6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Neues Gerät auf registrierten Benutzer anmelden:" />
+
+        <TextView
+            android:id="@+id/textView5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="ID eines registrierten Geräts:" />
+
+        <EditText
+            android:id="@+id/txtOldDeviceID"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10" >
+
+            <requestFocus />
+        </EditText>
+
+        <Button
+            android:id="@+id/btnAddDeviceToUser"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="addDeviceToUser"
+            android:text="Gerät hinzufügen" />
+
+        <TextView
             android:id="@+id/textView1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -83,6 +111,7 @@
             android:layout_below="@+id/txt_nachname"
             android:onClick="neuAnmelden"
             android:text="Mich in der Applikation anmelden" />
+
     </LinearLayout>
 
 </RelativeLayout>

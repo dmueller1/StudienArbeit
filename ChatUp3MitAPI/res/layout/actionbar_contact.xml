@@ -16,7 +16,7 @@
 	    android:background="@drawable/actionbar_background"
 	    android:paddingTop="5dp"
 	    android:paddingBottom="5dp">"
-	 
+
 	        <LinearLayout
 	            xmlns:android="http://schemas.android.com/apk/res/android"
 	            android:id="@+id/buttonlayout2"
@@ -25,7 +25,7 @@
 	            android:gravity="left|center_vertical"
 	            android:layout_gravity="left"
 	            android:layout_width="wrap_content">
-	           
+
 	                <TextView
 	                    android:id="@+id/actionbarTxt"
 	                    android:layout_width="fill_parent"
@@ -39,7 +39,7 @@
 
 	                </TextView>
 	        </LinearLayout>
-	 
+
 	        <LinearLayout
 	            xmlns:android="http://schemas.android.com/apk/res/android"
 	            android:id="@+id/buttonlayout2"
@@ -48,7 +48,8 @@
 	            android:gravity="right"
 	            android:layout_gravity="right"
 	            android:layout_width="fill_parent">
-	 
+
+
 	            <Button
 	                android:id="@+id/btnAddChat"
 	                android:layout_width="45dp"
@@ -57,7 +58,7 @@
 	                android:onClick="addChat" >
 
 	            </Button>
-	 
+
 	            <LinearLayout
 	                android:id="@+id/actionbar_seperator_funk"
 	                android:layout_width="2dp"
@@ -65,12 +66,13 @@
 	                android:background="#9E9E9E"
 	                android:orientation="horizontal" >
 	            </LinearLayout>
-	 
+
 	            <Button
 	                android:id="@+id/btnSettings"
 	                android:layout_width="45sp"
 	                android:layout_height="45dp"
-	                android:background="@android:drawable/ic_menu_preferences">
+	                android:background="@android:drawable/ic_menu_preferences"
+	                android:onClick="showSettings">
 	            </Button>
 	 
 	        </LinearLayout>

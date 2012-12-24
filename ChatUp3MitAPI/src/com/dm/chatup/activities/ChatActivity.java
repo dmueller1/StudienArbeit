@@ -2,10 +2,11 @@ package com.dm.chatup.activities;
 
 import java.util.List;
 import com.dm.chatup.system.ChatHistoryAdapter;
+import com.dm.chatup.system.NotificationMaker;
 
-import de.dm.chatup.chat.Chat;
-import de.dm.chatup.chat.Contact;
-import de.dm.chatup.chat.Message;
+import de.dm.chatup.network.Network.Chat;
+import de.dm.chatup.network.Network.Contact;
+import de.dm.chatup.network.Network.Message;
 import de.dm.chatup.client.ChatUpClient;
 import de.dm.chatup.client.ClientMessageSendErrorException;
 import de.dm.chatup.client.NewChatEvent;
@@ -27,6 +28,7 @@ import android.app.Notification;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
+import android.telephony.TelephonyManager;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MotionEvent;
@@ -54,6 +56,7 @@ public class ChatActivity extends Activity implements NewMessageEvent, NewUserIn
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
+        NotificationMaker.actualClass = this.getClass();
         cuc = ChatUpClient.getInstance("dmmueller1.dyndns-web.com", 54555);
         notiMan = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         NewMessageHandler.getInstance().addListener(this);
@@ -102,6 +105,8 @@ public class ChatActivity extends Activity implements NewMessageEvent, NewUserIn
 
     }
     
+    
+    
     public void sendMessage(View v) {
 
     	((ProgressBar)findViewById(R.id.progress_new_message)).setVisibility(View.VISIBLE);
@@ -124,58 +129,80 @@ public class ChatActivity extends Activity implements NewMessageEvent, NewUserIn
         getMenuInflater().inflate(R.menu.activity_chat, menu);
         return true;
     }
-
-    public void reactOnNewMessage(final Message msg) {
-		findViewById(R.id.listView1).post(new Runnable() {
-			public void run() {
-				if(msg.getChatID() == cuc.getActualChatID()) {
-					ListView messageHistory = (ListView) findViewById(R.id.listView1);
-					List<Message> nachrichtenListe = cuc.getChatFromID(cuc.getActualChatID()).getMessages();
-					messageHistory.setAdapter(new ChatHistoryAdapter(getApplicationContext(), R.layout.listitem_history, cuc.getMyUserID(), nachrichtenListe));
-					messageHistory.setSelection(messageHistory.getAdapter().getCount()-1);
-				} else {
-					if(cuc.getMyUserID() != msg.getErstellerID()) {
-						Vibrator v = (Vibrator)getSystemService(Context.VIBRATOR_SERVICE);
-						v.vibrate(500);
-//						Notification noti = mySystem.makeNotification("Neue Nachricht in Chat \"" + mySystem.getChatFromID(msg.getChatID()).getName() + "\"!", this, ChatActivity.class, msg.getChatID());
-//						notiMan.notify(ID_NOTIFIER_CHAT_NEW_MESSAGE, noti);
+    
+    public void reactOnNewMessage(final Chat chat, final Message msg) {
+    	
+    	if(this.getClass() == NotificationMaker.actualClass) {
+    	
+			findViewById(R.id.listView1).post(new Runnable() {
+				public void run() {
+					if(chat.getChatID() == cuc.getActualChatID()) {
+						ListView messageHistory = (ListView) findViewById(R.id.listView1);
+						List<Message> nachrichtenListe = cuc.getChatFromID(cuc.getActualChatID()).getMessages();
+						messageHistory.setAdapter(new ChatHistoryAdapter(getApplicationContext(), R.layout.listitem_history, cuc.getMyUserID(), nachrichtenListe));
+						messageHistory.setSelection(messageHistory.getAdapter().getCount()-1);
+					} else {
+						if(cuc.getMyUserID() != msg.getErstellerID()) {
+							Vibrator v = (Vibrator)getSystemService(Context.VIBRATOR_SERVICE);
+							v.vibrate(500);
+							Notification noti = NotificationMaker.makeNotification("Neue Nachricht in Chat \"" + chat.getName() + "\"!", getParent(), ChatActivity.class, chat.getChatID());
+							notiMan.notify(ID_NOTIFIER_CHAT_NEW_MESSAGE, noti);
+						}
 					}
 				}
-			}
-		});
+			});
+    	}
+    	
     }
 
-	public void reactOnNewChat(Chat c) {		
-//		Notification noti = mySystem.makeNotification("Du wurdest zum Chat \"" + c.getName() + "\" hinzugefügt!", this, ChatActivity.class, c.getChatID());
-//		notiMan.notify(ID_NOTIFIER_CHAT_NEW_CHAT, noti);
-	}
-
-	public void reactOnNewUserInChat(Contact c, int chatID) {
-		
-		if(cuc.getActualChatID() == chatID) {
-			ListView messageHistory = (ListView) findViewById(R.id.listView1);
-			List<Message> nachrichtenListe = cuc.getChatFromID(cuc.getActualChatID()).getMessages();
-			if (nachrichtenListe != null) {
-				messageHistory.setAdapter(new ChatHistoryAdapter(this, R.layout.listitem_history, cuc.getMyUserID(), nachrichtenListe));
-				messageHistory.setSelection(messageHistory.getAdapter().getCount()-1);
-			}
-		} else {
-//			Notification noti = mySystem.makeNotification(c.getVorname() + " " + c.getNachname() + " ist Chat \"" + mySystem.getChatFromID(chatID).getName() + "\" beigetreten!", this, ChatActivity.class, chatID);
-//			notiMan.notify(ID_NOTIFIER_CHAT_NEW_USER_IN_CHAT, noti);
+	public void reactOnNewChat(Chat c) {	
+		if(this.getClass() == NotificationMaker.actualClass) {
+			Notification noti = NotificationMaker.makeNotification("Du wurdest zum Chat \"" + c.getName() + "\" hinzugefügt!", this, ChatActivity.class, c.getChatID());
+			notiMan.notify(ID_NOTIFIER_CHAT_NEW_CHAT, noti);
 		}
 	}
 
+	public void reactOnNewUserInChat(Contact c, int chatID) {
+		if(this.getClass() == NotificationMaker.actualClass) {
+			if(cuc.getActualChatID() == chatID) {
+				findViewById(R.id.listView1).post(new Runnable() {
+
+					public void run() {
+						ListView messageHistory = (ListView) findViewById(R.id.listView1);
+						List<Message> nachrichtenListe = cuc.getChatFromID(cuc.getActualChatID()).getMessages();
+						if (nachrichtenListe != null) {
+							messageHistory.setAdapter(new ChatHistoryAdapter(getApplicationContext(), R.layout.listitem_history, cuc.getMyUserID(), nachrichtenListe));
+							messageHistory.setSelection(messageHistory.getAdapter().getCount()-1);
+						}
+					}
+				});
+				
+			} else {
+				Notification noti = NotificationMaker.makeNotification(c.getVorname() + " " + c.getNachname() + " ist Chat \"" + cuc.getChatFromID(chatID).getName() + "\" beigetreten!", this, ChatActivity.class, chatID);
+				notiMan.notify(ID_NOTIFIER_CHAT_NEW_USER_IN_CHAT, noti);
+			}
+		}
+		
+	}
+
 	public void reactOnNewUser(Contact c) {
-//		Notification noti = mySystem.makeNotification("Neuer Benutzer: " + c.getVorname() + " " + c.getNachname(), this, ContactActivity.class);
-//		notiMan.notify(ID_NOTIFIER_CHAT_NEW_USER, noti);
-		Intent i = new Intent (this, ChatActivity.class);
-		i.putExtra("chatID", cuc.getActualChatID());
-		startActivity(i);
+		if(this.getClass() == NotificationMaker.actualClass) {
+			Notification noti = NotificationMaker.makeNotification("Neuer Benutzer: " + c.getVorname() + " " + c.getNachname(), this, ContactActivity.class);
+			notiMan.notify(ID_NOTIFIER_CHAT_NEW_USER, noti);
+			Intent i = new Intent (this, ChatActivity.class);
+			i.putExtra("chatID", cuc.getActualChatID());
+			startActivity(i);
+		}
 	}
 	
 	public void addUsers(View v) {
 		Intent i = new Intent (this, ChatAddUserActivity.class);
 		startActivity(i);
+	}
+	
+	public void showSettings(View v) {
+		TelephonyManager tManager = (TelephonyManager) this.getSystemService(Context.TELEPHONY_SERVICE);
+		Toast.makeText(getApplicationContext(), "Deine DeviceID: "+tManager.getDeviceId(), Toast.LENGTH_LONG).show();
 	}
 	
 	private class ATSendNewMessage extends AsyncTask<Network.SendNewMessage, Boolean, Void> {
@@ -211,5 +238,8 @@ public class ChatActivity extends Activity implements NewMessageEvent, NewUserIn
         }
         return super.onKeyDown(keyCode, event);
     }
+	
+
+	
 	
 }

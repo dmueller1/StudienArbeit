@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.dm.chatup.activities.R;
 
-import de.dm.chatup.chat.Contact;
+import de.dm.chatup.network.Network.Contact;
 
 import android.content.Context;
 import android.graphics.Bitmap;

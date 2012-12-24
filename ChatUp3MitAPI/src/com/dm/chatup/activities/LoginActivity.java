@@ -71,6 +71,31 @@ public class LoginActivity extends Activity {
 			txtInfo.setText("Bitte Vor- und Nachname ausfüllen!");
 		}
     }
+    
+    public void addDeviceToUser(View v) {
+    	String oldDeviceID = ((EditText) findViewById(R.id.txtOldDeviceID)).getText().toString();
+    	String newDeviceID = ((TelephonyManager)this.getSystemService(Context.TELEPHONY_SERVICE)).getDeviceId();
+		
+    	anmeldeMaske.setVisibility(View.VISIBLE);
+    	int userID;
+		try {
+			userID = cuc.addDeviceToUser(oldDeviceID, newDeviceID);
+			if (userID != -1) {
+				txtInfo.setText("Gerät erfolgreich registriert. Öffne Chat-Übersicht...");
+				Intent i = new Intent(getApplicationContext(), ContactActivity.class);
+				startActivity(i);
+			} else {
+				txtInfo.setText("Gerät konnte nicht hinzugefügt werden, bitte GeräteID des bereits registrierten Geräts prüfen!");
+				warteKreis.setVisibility(View.GONE);
+			}
+		} catch (ClientNotConnectedException e) {
+			warteKreis.setVisibility(View.GONE);
+			txtInfo.setText("Fehler beim Abfragen der Daten. \n - Hast du Internet? \n - Läuft der Server? \nBitte App schließen und erneut starten!");
+	        txtInfo.setVisibility(View.VISIBLE);
+		}
+    	
+		
+    }
 
     private class ATGetDataUserExisting extends AsyncTask<String, Integer, Void> {
 

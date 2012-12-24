@@ -22,39 +22,43 @@ public final class R {
         public static final int actionbar_seperator_funk=0x7f070005;
         public static final int anmeldeMaske=0x7f070010;
         public static final int btnAddChat=0x7f070004;
-        public static final int btnAnmelden=0x7f070018;
+        public static final int btnAddDeviceToUser=0x7f070016;
+        public static final int btnAnmelden=0x7f07001c;
         public static final int btnSettings=0x7f070006;
         public static final int button1=0x7f07000b;
         public static final int buttonlayout=0x7f070000;
         public static final int buttonlayout2=0x7f070001;
-        public static final int chat_info=0x7f07001e;
-        public static final int chat_name=0x7f07001d;
-        public static final int chat_wrapper=0x7f07001c;
-        public static final int contact_check=0x7f070020;
-        public static final int contact_wrapper=0x7f07001f;
+        public static final int chat_info=0x7f070022;
+        public static final int chat_name=0x7f070021;
+        public static final int chat_wrapper=0x7f070020;
+        public static final int contact_check=0x7f070024;
+        public static final int contact_wrapper=0x7f070023;
         public static final int editText1=0x7f07000a;
-        public static final int history_info=0x7f070022;
-        public static final int history_msg=0x7f070023;
-        public static final int history_wrapper=0x7f070021;
+        public static final int history_info=0x7f070026;
+        public static final int history_msg=0x7f070027;
+        public static final int history_wrapper=0x7f070025;
         public static final int inc_actionbar_chat=0x7f070009;
         public static final int inc_actionbar_contact=0x7f07000e;
-        public static final int inc_actionbar_new_chat=0x7f070019;
+        public static final int inc_actionbar_new_chat=0x7f07001d;
         public static final int listAddUser=0x7f07000d;
         public static final int listView1=0x7f07000c;
-        public static final int list_contacts=0x7f07001b;
-        public static final int menu_addChat=0x7f070025;
-        public static final int menu_settings=0x7f070024;
+        public static final int list_contacts=0x7f07001f;
+        public static final int menu_addChat=0x7f070029;
+        public static final int menu_settings=0x7f070028;
         public static final int progressBar1=0x7f070011;
         public static final int progress_chat_add_user=0x7f070007;
         public static final int progress_new_chat=0x7f070008;
         public static final int progress_new_message=0x7f070003;
-        public static final int textView1=0x7f070013;
-        public static final int textView2=0x7f070014;
-        public static final int textView3=0x7f070016;
+        public static final int textView1=0x7f070017;
+        public static final int textView2=0x7f070018;
+        public static final int textView3=0x7f07001a;
         public static final int textView4=0x7f070012;
-        public static final int txtChatName=0x7f07001a;
-        public static final int txt_nachname=0x7f070017;
-        public static final int txt_vorname=0x7f070015;
+        public static final int textView5=0x7f070014;
+        public static final int textView6=0x7f070013;
+        public static final int txtChatName=0x7f07001e;
+        public static final int txtOldDeviceID=0x7f070015;
+        public static final int txt_nachname=0x7f07001b;
+        public static final int txt_vorname=0x7f070019;
         public static final int warteMaske=0x7f07000f;
     }
     public static final class layout {
@@ -78,6 +82,8 @@ public final class R {
         public static final int activity_contact=0x7f060003;
         public static final int activity_login=0x7f060004;
         public static final int activity_new_chat=0x7f060005;
+        public static final int activity_new_device_to_user=0x7f060006;
+        public static final int activity_settings=0x7f060007;
     }
     public static final class string {
         public static final int app_name=0x7f040000;
@@ -89,6 +95,8 @@ public final class R {
         public static final int title_activity_contact=0x7f040004;
         public static final int title_activity_login=0x7f040003;
         public static final int title_activity_new_chat=0x7f040006;
+        public static final int title_activity_new_device_to_user=0x7f04000a;
+        public static final int title_activity_settings=0x7f040009;
     }
     public static final class style {
         public static final int AppTheme=0x7f050000;
