@@ -18,7 +18,8 @@
         android:theme="@style/AppTheme" >
         <activity
             android:name="com.dm.chatup.activities.LoginActivity"
-            android:label="@string/title_activity_login" >
+            android:label="@string/title_activity_login"
+            android:theme="@android:style/Theme.Light.NoTitleBar" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -27,19 +28,23 @@
         </activity>
         <activity
             android:name="com.dm.chatup.activities.ContactActivity"
-            android:label="@string/title_activity_contact" >
+            android:label="@string/title_activity_contact"
+            android:theme="@android:style/Theme.Light.NoTitleBar" >
         </activity>
         <activity
             android:name="com.dm.chatup.activities.ChatActivity"
-            android:label="@string/title_activity_chat" >
+            android:label="@string/title_activity_chat"
+            android:theme="@android:style/Theme.Light.NoTitleBar" >
         </activity>
         <activity
             android:name="com.dm.chatup.activities.NewChatActivity"
-            android:label="@string/title_activity_new_chat" >
+            android:label="@string/title_activity_new_chat"
+            android:theme="@android:style/Theme.Light.NoTitleBar" >
         </activity>
         <activity
             android:name="com.dm.chatup.activities.ChatAddUserActivity"
-            android:label="@string/title_activity_chat_add_user" >
+            android:label="@string/title_activity_chat_add_user"
+            android:theme="@android:style/Theme.Light.NoTitleBar" >
         </activity>
     </application>
 

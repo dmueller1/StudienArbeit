@@ -26,12 +26,15 @@ public class NewMessageHandler {
 	protected void notifyAllListener(final Chat chat, final Message msg) {
 		AppSystem.getInstance().setLastMessage(msg);
 		
-		if(AppSystem.getInstance().getMyChats().contains(chat)) {
-			//AppSystem.getInstance().addMessageToChat(msg, chat);
-			for (int i = 0; i < this.allListener.size(); i++) {
-				notify(allListener.get(i), chat, msg);
+		for(int j = 0; j < AppSystem.getInstance().getMyChats().size(); j++) {
+			if(AppSystem.getInstance().getMyChats().get(j).getChatID() == chat.getChatID()) {
+				//AppSystem.getInstance().addMessageToChat(msg, chat);
+				for (int i = 0; i < this.allListener.size(); i++) {
+					notify(allListener.get(i), chat, msg);
+				}
 			}
 		}
+		
 	}
 
 	private void notify(NewMessageEvent toNotify, final Chat chat, final Message msg) {

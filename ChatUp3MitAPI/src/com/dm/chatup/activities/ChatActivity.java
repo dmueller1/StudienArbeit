@@ -65,6 +65,7 @@ public class ChatActivity extends Activity implements NewMessageEvent, NewUserIn
 		NewUserHandler.getInstance().addListener(this);
 		
 		cuc.setActualChatID(this.getIntent().getExtras().getInt("chatID"));
+		((TextView)findViewById(R.id.actionbarTxt)).setText(cuc.getChatFromID(cuc.getActualChatID()).getName());
 
 		// Fill ListView with messages: *****************************
 		ListView messageHistory = (ListView) findViewById(R.id.listView1);
@@ -94,7 +95,7 @@ public class ChatActivity extends Activity implements NewMessageEvent, NewUserIn
 			public boolean onEditorAction(TextView v, int actionId,
 					KeyEvent event) {
 				if (event != null&& (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
-					sendMessage(v);
+					sendMessage(v); 
 					return true;
 				}
 				return false;
@@ -136,8 +137,8 @@ public class ChatActivity extends Activity implements NewMessageEvent, NewUserIn
     	
 			findViewById(R.id.listView1).post(new Runnable() {
 				public void run() {
+					ListView messageHistory = (ListView) findViewById(R.id.listView1);
 					if(chat.getChatID() == cuc.getActualChatID()) {
-						ListView messageHistory = (ListView) findViewById(R.id.listView1);
 						List<Message> nachrichtenListe = cuc.getChatFromID(cuc.getActualChatID()).getMessages();
 						messageHistory.setAdapter(new ChatHistoryAdapter(getApplicationContext(), R.layout.listitem_history, cuc.getMyUserID(), nachrichtenListe));
 						messageHistory.setSelection(messageHistory.getAdapter().getCount()-1);
@@ -145,7 +146,7 @@ public class ChatActivity extends Activity implements NewMessageEvent, NewUserIn
 						if(cuc.getMyUserID() != msg.getErstellerID()) {
 							Vibrator v = (Vibrator)getSystemService(Context.VIBRATOR_SERVICE);
 							v.vibrate(500);
-							Notification noti = NotificationMaker.makeNotification("Neue Nachricht in Chat \"" + chat.getName() + "\"!", getParent(), ChatActivity.class, chat.getChatID());
+							Notification noti = NotificationMaker.makeNotification("Neue Nachricht in Chat \"" + chat.getName() + "\"!", (Activity)messageHistory.getContext(), ChatActivity.class, chat.getChatID());
 							notiMan.notify(ID_NOTIFIER_CHAT_NEW_MESSAGE, noti);
 						}
 					}

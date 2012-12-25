@@ -30,49 +30,35 @@ public class KryonetClient {
 		
 		try {
 			this.empfangen = false;
-			client = new Client();
+			client = new Client(100000, 100000);
 			client.start();
 			Network.register(client);
 			
 
 			client.addListener(new Listener() {
 			
-//				@Override
-//				public void disconnected(Connection conn) {
-//					
-//					try {
-//						while(!client.isConnected()) {
-//							client.connect(5000, serverLink, port);
-//							System.out.println("Wiederaufbau der Verbindung wird versucht...");
-//							Thread.sleep(1000);
-//						}
-//					} catch (IOException e) {
-//						e.printStackTrace();
-//						disconnected(conn);
-//					} catch (InterruptedException e) {
-//						e.printStackTrace();
-//					}
-//					
-//				}
-//
-//				@Override
-//				public void idle(Connection arg0) {
-//					try {
-//						
-//						while(!client.isConnected()) {
-//							client.connect(5000, serverLink, port);
-//							System.out.println("Wiederaufbau der Verbindung wird versucht2...");
-//							Thread.sleep(1000);
-//						}
-//						System.out.println("Idle...");
-//						Thread.sleep(1000);
-//						
-//					} catch (IOException e) {
-//						e.printStackTrace();
-//					} catch (InterruptedException e) {
-//						e.printStackTrace();
-//					}
-//				}
+				@Override
+				public void disconnected(final Connection conn) {
+					
+	                new Thread() {
+	                	public void run () {
+	                    	try {
+	                        	while(!client.isConnected()) {
+	                            	client.reconnect(5000);
+	                            }
+	                        } catch (IOException ex) {
+	                            ex.printStackTrace();
+	                            try {
+									Thread.sleep(10000);
+								} catch (InterruptedException e) {
+									e.printStackTrace();
+								}
+	                            disconnected(conn);
+	                        }
+	                    }
+	                }.start();
+					
+				}
 
 				public void received(Connection connection, Object object) {
 					

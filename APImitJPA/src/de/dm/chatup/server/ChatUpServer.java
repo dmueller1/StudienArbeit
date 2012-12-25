@@ -29,7 +29,7 @@ public class ChatUpServer {
 		try {
 			this.serverConn = ServerConnection.getInstance();
 			this.isRunning = false;
-			this.server = new Server();
+			this.server = new Server(100000, 100000);
 			Network.register(server);
 			
 			server.addListener(new Listener() {
@@ -199,7 +199,7 @@ public class ChatUpServer {
 						}
 						return;
 					} else {
-						System.out.println("...");
+						System.out.println("..."+server.getConnections().length);
 						return;
 					}
 				}
