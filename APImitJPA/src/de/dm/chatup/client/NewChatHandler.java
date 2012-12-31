@@ -2,11 +2,13 @@ package de.dm.chatup.client;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import de.dm.chatup.network.Network.Chat;
-import de.dm.chatup.network.Network.Contact;
 
-
+/**
+ * Handler, in dem die hörenden Klassen registriert werden und der das Ereignis auslöst
+ * @author Daniel Müller
+ *
+ */
 public class NewChatHandler {
 	static NewChatHandler instance = null;
 	List<NewChatEvent> allListener = new ArrayList<NewChatEvent>();
@@ -18,14 +20,21 @@ public class NewChatHandler {
 		return instance;
 	}
 	
+	/**
+	 * Fügt eine Listener-Klasse, die das Event implementiert hinzu
+	 * @param evt Die hinzuzufügende Klasse
+	 */
 	public void addListener(NewChatEvent evt) {
 		this.allListener.add(evt);
 	}
 	
+	/**
+	 * Methode, die das Ereignis auslöst und alle registrierten Klassen darauf reagieren lässt
+	 * @param c Neu erstellter Chat, auf den reagiert werden soll
+	 */
 	protected void notifyAllListener(final Chat c) {
 		
 		int myUserID = AppSystem.getInstance().getUserID();
-		Contact me = AppSystem.getInstance().getUserFromID(myUserID);
 		
 		// Bin ich überhaupt in dem Chat drin --> interessiert es mich???
 		for(int i = 0; i < c.getUsers().size(); i++) {
@@ -39,39 +48,12 @@ public class NewChatHandler {
 		}
 	}
 	
+	/**
+	 * Ruft die implementierte Methode der Listener-Klasse auf
+	 * @param toNotify Die Listener-Klasse, in der die Methode implementiert wurde
+	 * @param c Der neu erstellte Chat, auf den reagiert werden soll
+	 */
 	private void notify(NewChatEvent toNotify, final Chat c) {
-		
 		toNotify.reactOnNewChat(c);
-		
-//		if (toNotify instanceof ContactActivity) {
-//			final ContactActivity ca = (ContactActivity)toNotify;
-//			ca.findViewById(R.id.listView1).post(new Runnable() {
-//				public void run() {
-//					Vibrator v = (Vibrator) ca.getSystemService(Context.VIBRATOR_SERVICE);
-//					v.vibrate(500);
-//					ca.reactOnNewChat(c);
-//				}
-//			});
-//		} else if (toNotify instanceof ChatActivity) {
-//			final ChatActivity ca = (ChatActivity)toNotify;
-//			ca.findViewById(R.id.listView1).post(new Runnable() {
-//				public void run() {
-//					Vibrator v = (Vibrator) ca.getSystemService(Context.VIBRATOR_SERVICE);
-//					v.vibrate(500);
-//					ca.reactOnNewChat(c);
-//				}
-//			});
-//		} else if (toNotify instanceof NewChatActivity) {
-//			final NewChatActivity ca = (NewChatActivity)toNotify;
-//			ca.findViewById(R.id.list_contacts).post(new Runnable() {
-//				public void run() {
-//					Vibrator v = (Vibrator) ca.getSystemService(Context.VIBRATOR_SERVICE);
-//					v.vibrate(500);
-//					ca.reactOnNewChat(c);
-//				}
-//			});
-//		} 
-		
 	}
-	
 }

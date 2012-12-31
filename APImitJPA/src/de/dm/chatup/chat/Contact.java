@@ -1,16 +1,15 @@
 package de.dm.chatup.chat;
 
-import java.util.List;
-
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
-import com.esotericsoftware.kryo.Kryo;
-import com.esotericsoftware.kryo.io.Input;
-import com.esotericsoftware.kryo.io.Output;
-
+/**
+ * Entitätsklasse, die einen Benutzer repräsentiert
+ * @author Daniel Müller
+ *
+ */
 @Entity
 public class Contact {
 	
@@ -20,7 +19,7 @@ public class Contact {
 	String nachname;
 	
 	
-	public Contact() {
+	protected Contact() {
 		
 	}
 	
@@ -47,6 +46,10 @@ public class Contact {
 		return nachname;
 	}
 	
+	/**
+	 * Wandelt die Entitätsklassen-Instanz in eine Paketklasse, die per Kryonet verschickt werden kann, um.
+	 * @return Die umgewandelte Paketklasse
+	 */
 	public de.dm.chatup.network.Network.Contact toNetworkContact() {
 		de.dm.chatup.network.Network.Contact contact = new de.dm.chatup.network.Network.Contact();
 		contact.userid = userid;

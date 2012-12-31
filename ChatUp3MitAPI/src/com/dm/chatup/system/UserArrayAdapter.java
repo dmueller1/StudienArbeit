@@ -2,23 +2,16 @@ package com.dm.chatup.system;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import com.dm.chatup.activities.R;
-
 import de.dm.chatup.network.Network.Contact;
-
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 public class UserArrayAdapter extends ArrayAdapter<ContactBool> {
 	

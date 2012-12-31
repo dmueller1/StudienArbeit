@@ -5,7 +5,6 @@ import java.util.List;
 import com.dm.chatup.system.ContactBool;
 import com.dm.chatup.system.NotificationMaker;
 import com.dm.chatup.system.UserArrayAdapter;
-
 import de.dm.chatup.network.Network.Chat;
 import de.dm.chatup.network.Network.Contact;
 import de.dm.chatup.network.Network.Message;
@@ -19,7 +18,6 @@ import de.dm.chatup.client.NewUserEvent;
 import de.dm.chatup.client.NewUserHandler;
 import de.dm.chatup.client.NewUserInChatEvent;
 import de.dm.chatup.client.NewUserInChatHandler;
-
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Vibrator;
@@ -30,11 +28,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.telephony.TelephonyManager;
 import android.view.KeyEvent;
-import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.CheckBox;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;

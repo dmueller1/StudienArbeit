@@ -6,9 +6,18 @@ import java.util.List;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.EndPoint;
 
+/**
+ * Netzwerk-Klasse, die die zur korrkten Kommunikation benötigten Paketklassen enthält und für die Registrierung der Paketklassen des Chats (Client und Server) zuständig ist
+ * @author Daniel Müller
+ *
+ */
 public class Network {
 	
-	// This registers objects that are going to be sent over the network.
+	/**
+	 * Diese Methode registriert die benötigten Paketklassen auf dem übergebenen Endpunkt (Server bzw. Client), sodass diese serialsiert und über die Verbindung geschickt werden können. 
+	 * Diese Methode muss von allen sendenden und empfangenen Clienten/Server aufgerufen werden
+	 * @param endPoint
+	 */
 	static public void register(EndPoint endPoint) {
 		Kryo kryo = endPoint.getKryo();
 		kryo.setRegistrationRequired(false);
@@ -21,17 +30,20 @@ public class Network {
 		kryo.register(Message.class);
 		kryo.register(AddUser.class);
 		kryo.register(GetChatsFromUser.class);
-//		kryo.register(GetAllMessagesFromChat.class);
 		kryo.register(GetFriends.class);
 		kryo.register(IsUserExisting.class);
 		kryo.register(SendNewMessage.class);
 		kryo.register(AddNewChat.class);
 		kryo.register(AddUserToChat.class);
-//		kryo.register(GetUsersFromChat.class);
 		kryo.register(GetDateFromServer.class);
 		kryo.register(AddDeviceToUser.class);
 	}
 	
+	/**
+	 * Paketklasse eines Benutzers
+	 * @author Daniel Müller
+	 *
+	 */
 	static public class Contact {
 		public int userid;
 		public String vorname;
@@ -65,6 +77,11 @@ public class Network {
 		}
 	}
 	
+	/**
+	 * Paketklasse eines Geräts
+	 * @author Daniel Müller
+	 *
+	 */
 	static public class Device {
 		public String deviceID;
 		public Contact besitzer;
@@ -79,6 +96,11 @@ public class Network {
 		}
 	}
 	
+	/**
+	 * Paketklasse eines Chats
+	 * @author Daniel Müller
+	 *
+	 */
 	static public class Chat {
 		public int chatid;
 		public String name;
@@ -139,6 +161,11 @@ public class Network {
 		}
 	}
 	
+	/**
+	 * Paketklasse einer Nachricht
+	 * @author Daniel Müller
+	 *
+	 */
 	static public class Message {
 		public int messageid;
 		public Contact ersteller;
@@ -170,11 +197,11 @@ public class Network {
 		}
 	}
 
-//	static public class GetUsersFromChat {
-//		public int chatID;
-//		public List<Contact> result = new ArrayList<Contact>();
-//	}
-
+	/**
+	 * Paketklasse, um einen neuen Benutzer zu registrieren
+	 * @author Daniel Müller
+	 *
+	 */
 	static public class AddUser {
 		public String deviceID;
 		public String vorname;
@@ -183,27 +210,41 @@ public class Network {
 		public Contact result;
 	}
 
+	/**
+	 * Paketklasse, um die Chats eines Benutzers auslesen zu können
+	 * @author Daniel Müller
+	 *
+	 */
 	static public class GetChatsFromUser {
 		public int userID;
 		public List<Chat> result = new ArrayList<Chat>();
 	}
 
-//	static public class GetAllMessagesFromChat {
-//		public int chatID;
-//		public String lastUpdate;
-//		public List<Message> result = new ArrayList<Message>();
-//	}
-
+	/**
+	 * Paketklasse, um alle vorhandenen Benutzer auslesen zu können
+	 * @author Daniel Müller
+	 *
+	 */
 	static public class GetFriends {
 		// Liste als Array aus userID, deviceID, vorname, nachname
 		public List<Contact> result = new ArrayList<Contact>();
 	}
 
+	/**
+	 * Paketklasse, die prüft, ob ein Gerät bereits auf einen Benutzer angemeldet ist
+	 * @author Daniel Müller
+	 *
+	 */
 	static public class IsUserExisting {
 		public String deviceID;
 		public int result;
 	}
 
+	/**
+	 * Paketklasse, um eine neue Nachricht zu senden
+	 * @author Daniel Müller
+	 *
+	 */
 	static public class SendNewMessage {
 		public int chatID;
 		public int erstellerID;
@@ -211,21 +252,41 @@ public class Network {
 		public String nachricht;
 	}
 
+	/**
+	 * Paketklasse, um einen neuen Chat zu erstellen
+	 * @author Daniel Müller
+	 *
+	 */
 	static public class AddNewChat {
 		public String name;
 		public List<Contact> users = new ArrayList<Contact>();
 		public Chat result;
 	}
 
+	/**
+	 * Paketklasse, um einen Benutzer zu einem Chat hinzuzufügen
+	 * @author Daniel Müller
+	 *
+	 */
 	static public class AddUserToChat {
 		public int chatID;
 		public int userID;
 	}
 	
+	/**
+	 * Paketklasse, um die aktuelle Zeit vom Server abfragen zu können
+	 * @author Daniel Müller
+	 *
+	 */
 	static public class GetDateFromServer {
 		public String result;
 	}
 	
+	/**
+	 * Paketklasse, um einem Benutzer ein neues Gerät zuweisen zu können
+	 * @author Daniel Müller
+	 *
+	 */
 	static public class AddDeviceToUser {
 		public String oldDeviceID;
 		public String newDeviceID;

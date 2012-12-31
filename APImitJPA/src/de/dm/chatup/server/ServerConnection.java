@@ -1,30 +1,24 @@
 package de.dm.chatup.server;
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLEncoder;
-import java.sql.Date;
-import java.sql.SQLException;
-import java.sql.Timestamp;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.Persistence;
-
-import org.json.simple.*;
-import org.json.simple.parser.JSONParser;
-
 import de.dm.chatup.chat.Chat;
 import de.dm.chatup.chat.Contact;
 import de.dm.chatup.chat.Device;
 import de.dm.chatup.chat.Message;
 
+/**
+ * Klasse, die die Verbindung zwischen Server und Datenbank repräsentiert und Daten in diese einträgt bzw, aus dieser ausliest
+ * @author Daniel Müller
+ *
+ */
 public class ServerConnection {
 
 	final static String jpaPersistenceUnit = "MyNewAPIWithJPA2";
@@ -33,17 +27,27 @@ public class ServerConnection {
 	static ServerConnection instance;
 	
 
-	protected static ServerConnection getInstance() {
+	protected static ServerConnection getInstance(String dbLink, String username, String password, String database) {
 		if (instance == null) {
-			instance = new ServerConnection();
+			instance = new ServerConnection(dbLink, username, password, database);
 		}
 		return instance;
 	}
 	
-	protected ServerConnection() {
-		entityManager = Persistence.createEntityManagerFactory(jpaPersistenceUnit).createEntityManager();
+	private ServerConnection(String dbLink, String username, String password, String database) {
+		
+		Properties props = new Properties();
+		props.setProperty("javax.persistence.jdbc.url", "jdbc:mysql://" + dbLink + ":3306/" + database);
+		props.setProperty("javax.persistence.jdbc.user", username);
+		props.setProperty("javax.persistence.jdbc.password", password);
+		entityManager = Persistence.createEntityManagerFactory(jpaPersistenceUnit, props).createEntityManager();
 	}
 	
+	/**
+	 * Prüft in der Datenbank, ob die übergebene Geräte-ID bereits auf einen Benutzer angemeldet ist
+	 * @param deviceID Die zu überprüfende Gerätekennung
+	 * @return ID des Benutzers, falls das Gerät bereits auf einen registriert ist
+	 */
 	protected int isUserRegistered(String deviceID) {
 		try {
 			Contact c = (Contact)entityManager.createQuery("SELECT d.besitzer from Device d WHERE d.deviceID = :deviceid").setParameter("deviceid", deviceID).getSingleResult();
@@ -54,6 +58,14 @@ public class ServerConnection {
 		}
 	}
 	
+	/**
+	 * Fügt einen neuen Benutzer in die Datenbank ein
+	 * @param deviceID Gerätekennung des Geräts
+	 * @param vorname Vorname des Benutzers
+	 * @param nachname Nachname des Benutzers
+	 * @return Paketklasse des neu angelegten Benutzers
+	 * @throws ServerActionErrorException Fehler, der aufgerufen wird, wenn das Erstellen fehlschlägt
+	 */
 	protected de.dm.chatup.network.Network.Contact addNewUser(String deviceID, String vorname, String nachname) throws ServerActionErrorException {
 
 		try {
@@ -71,6 +83,15 @@ public class ServerConnection {
 		}
 	}
 
+	/**
+	 * Speichert eine neue Nachricht in der Datenbank
+	 * @param chatID ID des Chats, in dem die Nachricht erstellt wurde
+	 * @param userID ID des Benutzers, der die Nachricht gesendet hat
+	 * @param erstellDatum Erstelldatum der Nachricht (Serverzeit bei erhalt der Paketklasse)
+	 * @param nachricht Text der gesendeten Nachricht
+	 * @return Paketklasse der gespeicherten Nachricht
+	 * @throws ServerActionErrorException Fehler, der aufgerufen wird, wenn das Senden fehlschlägt
+	 */
 	protected de.dm.chatup.network.Network.Message sendNewMessage(int chatID, int userID, String erstellDatum,
 			String nachricht) throws ServerActionErrorException {
 		
@@ -90,8 +111,14 @@ public class ServerConnection {
 		}
 		
 	}
-
+	
+	/**
+	 * Liest alle Chat-Benutzer aus der Datenbank aus
+	 * @return Liste der Paketklassen, die die Benutzer repräsentieren
+	 * @throws ServerActionErrorException Fehler, der ausgelöst wird, wenn das Auslesen fehlschlägt
+	 */
 	protected List<de.dm.chatup.network.Network.Contact> getFriends() throws ServerActionErrorException {
+		@SuppressWarnings("unchecked")
 		List<Contact> friends = entityManager.createQuery("SELECT c from Contact c").getResultList();
 		List<de.dm.chatup.network.Network.Contact> returnContacts = new ArrayList<de.dm.chatup.network.Network.Contact>();
 		
@@ -99,23 +126,16 @@ public class ServerConnection {
 			returnContacts.add(friends.get(i).toNetworkContact());
 		}
 		return returnContacts;
-
 	}
 
-//	protected List<de.dm.chatup.network.Network.Message> getAllMessagesFromChat(int chatID, String lastUpdate) throws ServerActionErrorException {
-//		List<Message> messages = entityManager.createQuery("SELECT m from Message m WHERE m.chat.chatid = ?1 AND m.erstellDatum > ?2").setParameter(1, chatID).setParameter(2, lastUpdate).getResultList();
-//		List<de.dm.chatup.network.Network.Message> returnMsgs = new ArrayList<de.dm.chatup.network.Network.Message>();
-//		
-//		Chat c = (Chat)entityManager.createQuery("SELECT c from Chat c WHERE c.chatid = ?1").setParameter(1, chatID).getSingleResult();
-//		de.dm.chatup.network.Network.Chat nc = c.toNetworkChat();
-//		
-//		for(int i = 0; i < messages.size(); i++) {
-//			returnMsgs.add(messages.get(i).toNetworkMessage(nc));
-//		}
-//		return returnMsgs;
-//	}
-
+	/**
+	 * Liest die im Chat vorhandenen Benutzer aus
+	 * @param chatID ID des gesuchten Chats
+	 * @return Liste der Paketklassen, die die Benutzer repräsentieren
+	 * @throws ServerActionErrorException Fehler, der ausgelöst wird, wenn das Auslesen fehlschlägt
+	 */
 	protected List<de.dm.chatup.network.Network.Contact> getUsersFromChat(int chatID) throws ServerActionErrorException {
+		@SuppressWarnings("unchecked")
 		List<Contact> users = entityManager.createQuery("SELECT c.users from Chat c WHERE c.chatid = ?1").setParameter(1, chatID).getResultList();
 		List<de.dm.chatup.network.Network.Contact> returnUsers = new ArrayList<de.dm.chatup.network.Network.Contact>();
 		
@@ -125,7 +145,14 @@ public class ServerConnection {
 		return returnUsers;
 	}
 
+	/**
+	 * Liest die zum Benutzer gehörenden Chats aus (Chats in denen der Benutzer Mitglied ist)
+	 * @param userID ID des Benutzers, dessen Chats ausgelesen werden sollen
+	 * @return Liste der Paketklassen, die die Chats repräsentieren
+	 * @throws ServerActionErrorException Fehler, der ausgelöst wird, wenn das Auslesen fehlschlägt
+	 */
 	protected List<de.dm.chatup.network.Network.Chat> getChatsFromUserID(int userID) throws ServerActionErrorException {
+		@SuppressWarnings("unchecked")
 		List<Chat> chats = entityManager.createQuery("SELECT c from Chat c, Contact con WHERE con.userid = ?1 AND con MEMBER OF c.users").setParameter(1, userID).getResultList();
 		List<de.dm.chatup.network.Network.Chat> returnChats = new ArrayList<de.dm.chatup.network.Network.Chat>();
 		
@@ -135,7 +162,12 @@ public class ServerConnection {
 		return returnChats;
 	}
 	
-	
+	/**
+	 * Speichert einen neuen Chat in der Datenbank
+	 * @param name Name des zu speichernden Chats
+	 * @return Paketklasse des angelegten Chats
+	 * @throws ServerActionErrorException Fehler, der ausgelöst wird, wenn das Speichern fehlschlägt
+	 */
 	protected de.dm.chatup.network.Network.Chat createNewChat(String name) throws ServerActionErrorException {
 		
 		try {
@@ -151,6 +183,13 @@ public class ServerConnection {
 		}
 	}
 	
+	/**
+	 * Fügt einen Benutzer zu einem Chat hinzu
+	 * @param chatID ID des Chats, in welchen der Benutzer hinzugefügt werden soll
+	 * @param userID ID des hinzuzufügenden Benutzers
+	 * @return Paketklasse des Chats, in welchem der Benutzer hinzugefügt wurde
+	 * @throws ServerActionErrorException Fehler, der ausgelöst wird, wenn das Hinzufügen fehlschlägt
+	 */
 	protected de.dm.chatup.network.Network.Chat addUserToChat(int chatID, int userID) throws ServerActionErrorException {
 		
 		Chat chat = (Chat)entityManager.createQuery("SELECT c from Chat c where c.chatid = ?1").setParameter(1, chatID).getSingleResult();
@@ -170,7 +209,14 @@ public class ServerConnection {
 		
 	}
 
-	public int addDeviceToUser(String oldDeviceID, String newDeviceID) throws ServerActionErrorException {
+	/**
+	 * Weist ein neues Gerät einem bereits vorhandenen Benutzer zu, indem ein bereits registriertes Gerät angegeben wird
+	 * @param oldDeviceID ID eines bereits auf diesen Benutzer registrieren Endgeräts
+	 * @param newDeviceID ID des neu zu registrierenden Geräts
+	 * @return ID des Benutzers, auf den das neue Gerät registriert wurde
+	 * @throws ServerActionErrorException Fehler, der ausgelöst wird, wenn das Hinzufügen fehlschlägt
+	 */
+	protected int addDeviceToUser(String oldDeviceID, String newDeviceID) throws ServerActionErrorException {
 		try {
 			Contact c = (Contact)entityManager.createQuery("SELECT d.besitzer from Device d WHERE d.deviceID = ?1").setParameter(1, oldDeviceID).getSingleResult();
 			try {

@@ -1,20 +1,20 @@
 package de.dm.chatup.client;
 
 import java.io.IOException;
-
-import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
-import com.esotericsoftware.minlog.Log;
-
 import de.dm.chatup.network.Network;
 import de.dm.chatup.network.Network.*;
 
+/**
+ * Diese Klasse ist für das Senden und das Empfangen der Daten über Kryonet zuständig
+ * @author Daniel Müller
+ *
+ */
 public class KryonetClient {
 	
 	static KryonetClient instance = null;
-	//AppSystem mySystem;
 	Object resultOfCommunication;
 	boolean empfangen;
 	Client client;
@@ -26,7 +26,7 @@ public class KryonetClient {
 		return instance;
 	}
 	
-	protected KryonetClient(final String serverLink, final int port) {
+	private KryonetClient(final String serverLink, final int port) {
 		
 		try {
 			this.empfangen = false;
@@ -37,6 +37,9 @@ public class KryonetClient {
 
 			client.addListener(new Listener() {
 			
+				/**
+				 * Methode, die aufgerufen wird, wenn der Client keine Verbindung mehr zum Server hat - Es wird versucht, die Verbindung wiederherzustellen.
+				 */
 				@Override
 				public void disconnected(final Connection conn) {
 					
@@ -60,6 +63,9 @@ public class KryonetClient {
 					
 				}
 
+				/**
+				 * Methode, die aufgerufen wird, wenn der Client Daten empfängt.
+				 */
 				public void received(Connection connection, Object object) {
 					
 					
@@ -75,7 +81,6 @@ public class KryonetClient {
 					} else if (object instanceof Network.SendNewMessage) {
 						Chat chat = AppSystem.getInstance().getChatFromID(((Network.SendNewMessage) object).chatID);
 						Contact ersteller = AppSystem.getInstance().getUserFromID(((Network.SendNewMessage) object).erstellerID);
-						
 						Message m = new Message(chat, ersteller, ((Network.SendNewMessage) object).erstellDatum, ((Network.SendNewMessage) object).nachricht);
 						setEmpfangen(true);
 						NewMessageHandler.getInstance().notifyAllListener(chat, m);
@@ -118,6 +123,11 @@ public class KryonetClient {
 		
 	}
 	
+	/**
+	 * Senden eines Objects über die bestehende Verbindung
+	 * @param obj Das zu sendende Object
+	 * @return Boolean, ob das Object erfolgreich gesendet (Bestätigung vom Server) wurde.
+	 */
 	protected boolean send(Object obj)  {
 		try {
 			int zaehler = 0;
@@ -170,6 +180,10 @@ public class KryonetClient {
 		this.empfangen = empf;
 	}
 	
+	/**
+	 * Liest das zuletzt erfolgreich vom Server übermittelte Paket aus.
+	 * @return Das Paket als Object
+	 */
 	protected Object getResult() {
 		return this.resultOfCommunication;
 	}

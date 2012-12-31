@@ -2,7 +2,6 @@ package de.dm.chatup.chat;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -10,23 +9,24 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
-
-import com.esotericsoftware.kryo.Kryo;
-import com.esotericsoftware.kryo.io.Input;
-import com.esotericsoftware.kryo.io.Output;
-
-
+/**
+ * Entitätsklasse, die den Chat repräsentiert
+ * @author Daniel Müller
+ *
+ */
 @Entity
 public class Chat  {
 	
 	@Id @GeneratedValue(strategy = GenerationType.AUTO)
 	int chatid;
+	
 	String name;
+	
 	@ManyToMany(fetch = FetchType.EAGER)
 	List<Contact> users = new ArrayList<Contact>();
+	
 	@OneToMany(fetch=FetchType.EAGER)
 	List<Message> messages = new ArrayList<Message>();
-	
 	
 	protected Chat() {
 		
@@ -81,6 +81,10 @@ public class Chat  {
 		this.messages.add(msg);
 	}
 	
+	/**
+	 * Wandelt die Entitätsklassen-Instanz in eine Paketklasse, die per Kryonet verschickt werden kann, um.
+	 * @return Die umgewandelte Paketklasse
+	 */
 	public de.dm.chatup.network.Network.Chat toNetworkChat() {
 		de.dm.chatup.network.Network.Chat chat = new de.dm.chatup.network.Network.Chat();
 		chat.chatid = chatid;

@@ -9,6 +9,7 @@ public class NotificationMaker {
 	
 	public static Class<?> actualClass = null;
 	
+	@SuppressWarnings("deprecation")
 	public static Notification makeNotification(String text, Activity quellKlasse, Class<?> zielKlasse) {
 		Notification notification = new Notification(android.R.drawable.stat_notify_sync, text, System.currentTimeMillis());
 		notification.flags = Notification.FLAG_AUTO_CANCEL;
@@ -21,6 +22,7 @@ public class NotificationMaker {
 		return notification;
 	}
 
+	@SuppressWarnings("deprecation")
 	public static Notification makeNotification(String text, Activity quellKlasse, Class<?> zielKlasse, int chatID) {
 		Notification notification = new Notification(android.R.drawable.stat_notify_sync, text, System.currentTimeMillis());
 		notification.flags = Notification.FLAG_AUTO_CANCEL;

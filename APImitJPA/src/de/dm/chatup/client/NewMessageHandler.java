@@ -6,7 +6,11 @@ import java.util.List;
 import de.dm.chatup.network.Network.Chat;
 import de.dm.chatup.network.Network.Message;
 
-
+/**
+ * Handler, in dem die hörenden Klassen registriert werden und der das Ereignis auslöst
+ * @author Daniel Müller
+ *
+ */
 public class NewMessageHandler {
 
 	static NewMessageHandler instance = null;
@@ -19,10 +23,19 @@ public class NewMessageHandler {
 		return instance;
 	}
 
+	/**
+	 * Fügt eine Listener-Klasse, die das Event implementiert hinzu
+	 * @param evt Die hinzuzufügende Klasse
+	 */
 	public void addListener(NewMessageEvent evt) {
 		this.allListener.add(evt);
 	}
 
+	/**
+	 * Methode, die das Ereignis auslöst und alle registrierten Klassen darauf reagieren lässt
+	 * @param chat Der Chat, in dem die Nachricht erstellt wurde
+	 * @param msg Die empfangene Nachricht
+	 */
 	protected void notifyAllListener(final Chat chat, final Message msg) {
 		AppSystem.getInstance().setLastMessage(msg);
 		
@@ -37,31 +50,13 @@ public class NewMessageHandler {
 		
 	}
 
+	/**
+	 * Ruft die implementierte Methode der Listener-Klasse auf
+	 * @param toNotify Die Listener-Klasse, in der die Methode implementiert wurde
+	 * @param chat Der zur Nachricht gehörende Chat
+	 * @param msg Die empfangene Nachricht
+	 */
 	private void notify(NewMessageEvent toNotify, final Chat chat, final Message msg) {
-		
 		toNotify.reactOnNewMessage(chat, msg);
-		
-//		if(toNotify instanceof ContactActivity) { //&& AppSystem.getInstance().getUserID() != msg.getErstellerID()) {
-//			final ContactActivity ca = (ContactActivity)toNotify;
-//			ca.findViewById(R.id.listView1).post(new Runnable() {
-//				public void run() {
-//					ca.reactOnNewMessage(msg);
-//				}
-//			});
-//		} else if (toNotify instanceof ChatActivity) { //  && AppSystem.getInstance().getUserID() != msg.getErstellerID()) {
-//			final ChatActivity ca = (ChatActivity)toNotify;
-//			ca.findViewById(R.id.listView1).post(new Runnable() {
-//				public void run() {
-//					ca.reactOnNewMessage(msg);			
-//				}
-//			});
-//		} else if (toNotify instanceof NewChatActivity) { //  && AppSystem.getInstance().getUserID() != msg.getErstellerID()) {
-//			final NewChatActivity ca = (NewChatActivity)toNotify;
-//			ca.findViewById(R.id.list_contacts).post(new Runnable() {
-//				public void run() {
-//					ca.reactOnNewMessage(msg);
-//				}
-//			});
-//		} 
 	}
 }

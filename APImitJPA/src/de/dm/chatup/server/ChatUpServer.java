@@ -1,38 +1,48 @@
 package de.dm.chatup.server;
 
 import java.io.IOException;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.sql.Timestamp;
 import java.util.Date;
-
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
-
 import de.dm.chatup.network.Network.Chat;
 import de.dm.chatup.network.Network.Message;
 import de.dm.chatup.network.Network;
 
+/**
+ * Schnittstellen-Klasse des Servers, über welche zwischen Applikation und Chat-Logik kommuniziert werden kann
+ * @author Daniel Müller
+ *
+ */
 public class ChatUpServer {
 	
 	boolean isRunning;
 	Server server;
 	ServerConnection serverConn;
 	
-	public static void main(String[] args) {
-		
-	}
-	
+	/**
+	 * Erstellt eine Server-Instanz
+	 * @param port Port, auf den der Server hören soll
+	 * @param serverLink Link zum Datenbankserver
+	 * @param username Benutzername auf dem Datenbankserver
+	 * @param password Passwort auf dem Datenbankserver
+	 * @param database Datenbankname auf dem Datenbankserver
+	 */
 	public ChatUpServer (int port, String serverLink, String username, String password, String database) {
 		
 		try {
-			this.serverConn = ServerConnection.getInstance();
+			this.serverConn = ServerConnection.getInstance(serverLink, username, password, database);
 			this.isRunning = false;
 			this.server = new Server(100000, 100000);
 			Network.register(server);
 			
 			server.addListener(new Listener() {
+				
+				/**
+				 * Methode, die aufgerufen wird, wenn der Server Daten empfängt. In ihr wird auf die eintreffenden Paketklassen reagiert und ggf. Antwortdaten zurückgesendet
+				 */
+				@SuppressWarnings("deprecation")
 				public void received(Connection connection, Object object) {
 					
 					if (object instanceof Network.IsUserExisting) {
@@ -87,32 +97,6 @@ public class ChatUpServer {
 						}
 						
 						return;
-						
-//					}else if(object instanceof Network.GetUsersFromChat) {
-//						System.out.println("Request: Get Users in Chat...");
-//						Network.GetUsersFromChat gu = (Network.GetUsersFromChat)object;
-//						try {
-//							gu.result = serverConn.getUsersFromChat(gu.chatID);
-//							System.out.println(" --> Data received (Array of USerIDs): " + gu.result);
-//							connection.sendTCP(gu);
-//						} catch (ServerActionErrorException e) {
-//							System.out.println(e.getMessage());
-//						}
-//						
-//						return;
-//						
-//					} else if (object instanceof Network.GetAllMessagesFromChat) {
-//						System.out.println("Request: Get all messages...");
-//						Network.GetAllMessagesFromChat gam = (Network.GetAllMessagesFromChat)object;
-//						try {
-//							gam.result = serverConn.getAllMessagesFromChat(gam.chatID, gam.lastUpdate);
-//							System.out.println(" --> Data received (Array of messages):" + gam.result.size());
-//							connection.sendTCP(gam);
-//						} catch (ServerActionErrorException e) {
-//							System.out.println(e.getMessage());
-//						}
-//						
-//						return;
 						
 					} else if (object instanceof Network.SendNewMessage) {
 						System.out.println("Request: Send new message...");
@@ -215,6 +199,10 @@ public class ChatUpServer {
 		}
 	}
 	
+	/**
+	 * Gibt eine kurze Rückmeldung zum aktuellen Status des Servers
+	 * @return Text, der aussagt, ob der Server läuft oder nicht
+	 */
 	public String getStatus() {
 		if(this.isRunning == true) {
 				return "Server erfolgreich gestartet";

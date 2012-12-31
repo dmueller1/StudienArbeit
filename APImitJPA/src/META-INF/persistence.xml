@@ -9,11 +9,6 @@
 		
 		<properties>
       <property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver" />
-      <property name="javax.persistence.jdbc.url"
-        value="jdbc:mysql://localhost:3306/chat" />
-      <property name="javax.persistence.jdbc.user" value="chatuser" />
-      <property name="javax.persistence.jdbc.password" value="24.Stunden" />
-
       <!-- EclipseLink should create the database schema automatically -->
       <property name="eclipselink.ddl-generation" value="create-tables" />
       <property name="eclipselink.ddl-generation.output-mode"

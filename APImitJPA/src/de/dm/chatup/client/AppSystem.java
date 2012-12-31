@@ -1,19 +1,16 @@
 package de.dm.chatup.client;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
-
 import de.dm.chatup.network.Network.Chat;
 import de.dm.chatup.network.Network.Contact;
 import de.dm.chatup.network.Network.Message;
 
+/**
+ * Diese Klasse repräsentiert die lokale Logik des Systems. Sie hält ale nötigen Daten des Clients
+ * @author Daniel Müller
+ *
+ */
 public class AppSystem {
 	
 	static AppSystem instance = null;
@@ -54,15 +51,14 @@ public class AppSystem {
 		}
 	}
 	
-	protected void addUserToChat(Contact user, int chatID) {
-			for (int i = 0; i < this.myChats.size(); i++) {
-				if(this.myChats.get(i).getChatID() == chatID) {
-					this.myChats.get(i).addUser(user);
-					return;
-				}
-			}
-		
-	}
+//	protected void addUserToChat(Contact user, int chatID) {
+//			for (int i = 0; i < this.myChats.size(); i++) {
+//				if(this.myChats.get(i).getChatID() == chatID) {
+//					this.myChats.get(i).addUser(user);
+//					return;
+//				}
+//			}
+//	}
 	
 	protected Contact getUserFromID(int userID) {
 		for (int i = 0; i < this.myContacts.size(); i++) {
@@ -73,14 +69,14 @@ public class AppSystem {
 		return null;
 	}
 	
-	protected void addMessageToChat(Message msg, Chat chat) {
-		for (int i = 0; i < this.myChats.size(); i++) {
-			if(this.myChats.get(i).getChatID() == chat.getChatID()) {
-				this.myChats.get(i).addMessage(msg);
-				return;
-			}
-		}
-	}
+//	protected void addMessageToChat(Message msg, Chat chat) {
+//		for (int i = 0; i < this.myChats.size(); i++) {
+//			if(this.myChats.get(i).getChatID() == chat.getChatID()) {
+//				this.myChats.get(i).addMessage(msg);
+//				return;
+//			}
+//		}
+//	}
 	
 	protected Chat getChatFromID(int chatID) {
 		for (int i = 0; i < this.myChats.size(); i++) {

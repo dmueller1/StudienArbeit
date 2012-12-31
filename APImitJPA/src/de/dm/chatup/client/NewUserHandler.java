@@ -5,6 +5,11 @@ import java.util.List;
 
 import de.dm.chatup.network.Network.Contact;
 
+/**
+ * Handler, in dem die hörenden Klassen registriert werden und der das Ereignis auslöst
+ * @author Daniel Müller
+ *
+ */
 public class NewUserHandler {
 
 	static NewUserHandler instance = null;
@@ -17,11 +22,18 @@ public class NewUserHandler {
 		return instance;
 	}
 	
+	/**
+	 * Fügt eine Listener-Klasse, die das Event implementiert hinzu
+	 * @param evt Die hinzuzufügende Klasse
+	 */
 	public void addListener(NewUserEvent evt) {
 		this.allListener.add(evt);
 	}
 	
-
+	/**
+	 * Methode, die das Ereignis auslöst und alle registrierten Klassen darauf reagieren lässt
+	 * @param c Der Benutzer auf den reagiert werden soll
+	 */
 	protected void notifyAllListener(Contact c) {
 		AppSystem.getInstance().addContact(c);
 		for (int i = 0; i < this.allListener.size(); i++) {
@@ -29,37 +41,12 @@ public class NewUserHandler {
 		}
 	}
 
+	/**
+	 * Ruft die implementierte Methode der Listener-Klasse auf
+	 * @param toNotify Die Listener-Klasse, in der die Methode implementiert wurde
+	 * @param c Der neu registrierte Benutzer
+	 */
 	private void notify(NewUserEvent toNotify, final Contact c) {
-		
 		toNotify.reactOnNewUser(c);
-		
-//		if(toNotify instanceof ContactActivity && AppSystem.getInstance().getUserID() != c.getUserID()) {
-//			final ContactActivity ca = (ContactActivity)toNotify;
-//			ca.findViewById(R.id.listView1).post(new Runnable() {
-//				public void run() {
-//					Vibrator v = (Vibrator) ca.getSystemService(Context.VIBRATOR_SERVICE);
-//					v.vibrate(500);
-//					ca.reactOnNewUser(c);
-//				}
-//			});
-//		} else if (toNotify instanceof ChatActivity && AppSystem.getInstance().getUserID() != c.getUserID()) {
-//			final ChatActivity ca = (ChatActivity)toNotify;
-//			ca.findViewById(R.id.listView1).post(new Runnable() {
-//				public void run() {
-//					Vibrator v = (Vibrator) ca.getSystemService(Context.VIBRATOR_SERVICE);
-//					v.vibrate(500);
-//					ca.reactOnNewUser(c);
-//				}
-//			});
-//		} else if (toNotify instanceof NewChatActivity && AppSystem.getInstance().getUserID() != c.getUserID()) {
-//			final NewChatActivity ca = (NewChatActivity)toNotify;
-//			ca.findViewById(R.id.list_contacts).post(new Runnable() {
-//				public void run() {
-//					Vibrator v = (Vibrator) ca.getSystemService(Context.VIBRATOR_SERVICE);
-//					v.vibrate(500);
-//					ca.reactOnNewUser(c);
-//				}
-//			});
-//		} 
 	}
 }

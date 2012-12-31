@@ -1,32 +1,19 @@
 package com.dm.chatup.activities;
 
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-
-import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
-
 import de.dm.chatup.client.ChatUpClient;
 import de.dm.chatup.client.ClientNotConnectedException;
 import de.dm.chatup.client.ClientUserAddingErrorException;
-
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Environment;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.telephony.TelephonyManager;
-import android.view.Menu;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class LoginActivity extends Activity {
 	
@@ -81,6 +68,7 @@ public class LoginActivity extends Activity {
 		try {
 			userID = cuc.addDeviceToUser(oldDeviceID, newDeviceID);
 			if (userID != -1) {
+				cuc.getInitialChatDataFromServer();
 				txtInfo.setText("Gerät erfolgreich registriert. Öffne Chat-Übersicht...");
 				Intent i = new Intent(getApplicationContext(), ContactActivity.class);
 				startActivity(i);
@@ -115,7 +103,7 @@ public class LoginActivity extends Activity {
 				if (userID > -1) {
 					publishProgress(new Integer[] {1});
 					// If yes, get initial data
-					cuc.getInitialChatDataFromServer(Environment.getExternalStorageDirectory() + "/lastUpdate.cuf", Environment.getExternalStorageDirectory() + "/messages.cuf");
+					cuc.getInitialChatDataFromServer();
 				} else if (userID == -1 ){
 					publishProgress(new Integer[] {2});
 					this.cancel(true);
@@ -167,7 +155,7 @@ public class LoginActivity extends Activity {
 			try {
 				cuc.registerNewUser(params[0], params[1], params[2]);
 				publishProgress(new Boolean[] {true});
-				cuc.getInitialChatDataFromServer(Environment.getExternalStorageDirectory() + "/lastUpdate.cuf", Environment.getExternalStorageDirectory() + "/messages.cuf");
+				cuc.getInitialChatDataFromServer();
 			} catch (ClientUserAddingErrorException e) {
 				publishProgress(new Boolean[] {false});
 				this.cancel(true);
