@@ -30,14 +30,12 @@ import android.telephony.TelephonyManager;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
-import android.widget.AdapterView.OnItemClickListener;
 
 public class ChatActivity extends Activity implements NewMessageEvent, NewUserInChatEvent, NewChatEvent, NewUserEvent {
 
@@ -54,7 +52,7 @@ public class ChatActivity extends Activity implements NewMessageEvent, NewUserIn
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
         NotificationMaker.actualClass = this.getClass();
-        cuc = ChatUpClient.getInstance("dmmueller1.dyndns-web.com", 54555);
+        cuc = ChatUpClient.getInstance("dmmueller1.dyndns-web.com", 54556);
         notiMan = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         NewMessageHandler.getInstance().addListener(this);
 		NewUserInChatHandler.getInstance().addListener(this);
@@ -73,16 +71,16 @@ public class ChatActivity extends Activity implements NewMessageEvent, NewUserIn
 			
 			messageHistory.setAdapter(new ChatHistoryAdapter(this, R.layout.listitem_history, cuc.getMyUserID(), nachrichtenListe));
 
-			messageHistory.setOnItemClickListener(new OnItemClickListener() {
-
-				public void onItemClick(AdapterView<?> arg0, View arg1,
-						int pos, long arg3) {
-
-					Toast.makeText(getApplicationContext(), "Test beendet",
-							Toast.LENGTH_LONG).show();
-				}
-
-			});
+//			messageHistory.setOnItemClickListener(new OnItemClickListener() {
+//
+//				public void onItemClick(AdapterView<?> arg0, View arg1,
+//						int pos, long arg3) {
+//
+//					Toast.makeText(getApplicationContext(), "Test beendet",
+//							Toast.LENGTH_LONG).show();
+//				}
+//
+//			});
 			
 			messageHistory.setSelection(messageHistory.getAdapter().getCount()-1);
 		}
@@ -236,8 +234,4 @@ public class ChatActivity extends Activity implements NewMessageEvent, NewUserIn
         }
         return super.onKeyDown(keyCode, event);
     }
-	
-
-	
-	
 }

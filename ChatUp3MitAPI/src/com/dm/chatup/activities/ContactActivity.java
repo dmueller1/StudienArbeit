@@ -46,8 +46,7 @@ public class ContactActivity extends Activity implements NewMessageEvent,
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_contact);
 		NotificationMaker.actualClass = this.getClass();
-		cuc = ChatUpClient.getInstance("dmmueller1.dyndns-web.com", 54555);
-		
+		cuc = ChatUpClient.getInstance("dmmueller1.dyndns-web.com", 54556);
 		notiMan = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 		NewMessageHandler.getInstance().addListener(this);
 		NewUserInChatHandler.getInstance().addListener(this);
@@ -146,6 +145,5 @@ public class ContactActivity extends Activity implements NewMessageEvent,
 			}
 		}
 	}
-	
 
 }

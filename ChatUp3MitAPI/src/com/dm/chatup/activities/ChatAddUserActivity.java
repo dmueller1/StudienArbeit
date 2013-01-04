@@ -53,7 +53,7 @@ public class ChatAddUserActivity extends Activity implements NewChatEvent, NewMe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat_add_user);
         NotificationMaker.actualClass = this.getClass();
-        cuc = ChatUpClient.getInstance("dmmueller1.dyndns-web.com", 54555);
+        cuc = ChatUpClient.getInstance("dmmueller1.dyndns-web.com", 54556);
         notiMan = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         NewMessageHandler.getInstance().addListener(this);
 		NewUserInChatHandler.getInstance().addListener(this);
@@ -80,35 +80,41 @@ public class ChatAddUserActivity extends Activity implements NewChatEvent, NewMe
         	}
         }
         
-        ListView contactList = (ListView)findViewById(R.id.listAddUser);
-		contactList.setAdapter(new UserArrayAdapter(this,
-				R.layout.listitem_contact, cuc.getMyUserID(), filteredContacts));
-		contactList.setOnItemClickListener(new OnItemClickListener() {
-
-			public void onItemClick(AdapterView<?> listview, View arg1,
-					int pos, long arg3) {
-				ContactBool cb = (ContactBool) listview.getAdapter().getItem(
-						pos);
-				LinearLayout child1 = (LinearLayout) arg1;
-				LinearLayout child2 = (LinearLayout) child1.getChildAt(0);
-				CheckBox searchedCheckBox = (CheckBox) child2.getChildAt(0);
-				searchedCheckBox.setChecked(!searchedCheckBox.isChecked());
-				if (searchedCheckBox.isChecked() == true) {
-					contactsToAdd.add(cb.getContact());
-				} else {
-					contactsToAdd.remove(cb.getContact());
+        if(filteredContacts.size() > 0) {
+        
+	        ListView contactList = (ListView)findViewById(R.id.listAddUser);
+			contactList.setAdapter(new UserArrayAdapter(this,
+					R.layout.listitem_contact, cuc.getMyUserID(), filteredContacts));
+			contactList.setOnItemClickListener(new OnItemClickListener() {
+	
+				public void onItemClick(AdapterView<?> listview, View arg1,
+						int pos, long arg3) {
+					ContactBool cb = (ContactBool) listview.getAdapter().getItem(
+							pos);
+					LinearLayout child1 = (LinearLayout) arg1;
+					LinearLayout child2 = (LinearLayout) child1.getChildAt(0);
+					CheckBox searchedCheckBox = (CheckBox) child2.getChildAt(0);
+					searchedCheckBox.setChecked(!searchedCheckBox.isChecked());
+					if (searchedCheckBox.isChecked() == true) {
+						contactsToAdd.add(cb.getContact());
+					} else {
+						contactsToAdd.remove(cb.getContact());
+					}
 				}
-			}
-		});
+			});
+        } else {
+        	Intent i = new Intent(getApplicationContext(), ChatActivity.class);
+			i.putExtra("chatID", cuc.getActualChatID());
+			startActivity(i);
+        	Toast.makeText(getApplicationContext(), "Es gibt keine Benutzer mehr, die nicht Mitglied im Chat sind!", Toast.LENGTH_LONG).show();
+        }
     }
     
     public void addUsers(View v) {
-		((ProgressBar)findViewById(R.id.progress_chat_add_user)).setVisibility(View.VISIBLE);
 		
 			if (contactsToAdd.size() > 0) {
-				
+				((ProgressBar)findViewById(R.id.progress_chat_add_user)).setVisibility(View.VISIBLE);
 				int[] userIDs = new int[contactsToAdd.size()];
-				
 				for (int i = 0; i < contactsToAdd.size(); i++) {
 					userIDs[i] = contactsToAdd.get(i).getUserID();
 				}

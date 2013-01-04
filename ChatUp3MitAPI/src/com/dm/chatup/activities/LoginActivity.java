@@ -28,7 +28,7 @@ public class LoginActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        cuc = ChatUpClient.getInstance("dmmueller1.dyndns-web.com", 54555);
+        cuc = ChatUpClient.getInstance("dmmueller1.dyndns-web.com", 54556);
         this.anmeldeMaske = (LinearLayout) findViewById(R.id.anmeldeMaske);
         this.warteKreis = (ProgressBar) findViewById(R.id.progressBar1);
         this.txtInfo = (TextView) findViewById(R.id.textView4);

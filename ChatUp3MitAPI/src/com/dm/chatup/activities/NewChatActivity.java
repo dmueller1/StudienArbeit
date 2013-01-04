@@ -55,7 +55,7 @@ public class NewChatActivity extends Activity implements NewMessageEvent, NewUse
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_new_chat);
 		NotificationMaker.actualClass = this.getClass();
-		cuc = ChatUpClient.getInstance("dmmueller1.dyndns-web.com", 54555);
+		cuc = ChatUpClient.getInstance("dmmueller1.dyndns-web.com", 54556);
 		NewMessageHandler.getInstance().addListener(this);
 		NewUserInChatHandler.getInstance().addListener(this);
 		NewChatHandler.getInstance().addListener(this);

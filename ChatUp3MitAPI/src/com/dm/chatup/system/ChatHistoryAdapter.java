@@ -25,7 +25,7 @@ public class ChatHistoryAdapter extends ArrayAdapter<Message> {
 	private LinearLayout wrapper;
 	private int userID;
 	
-	ChatUpClient cuc = ChatUpClient.getInstance("dmmueller1.dyndns-web.com", 54555);
+	ChatUpClient cuc = ChatUpClient.getInstance("dmmueller1.dyndns-web.com", 54556);
 
 	@Override
 	public void add(Message msg) {
